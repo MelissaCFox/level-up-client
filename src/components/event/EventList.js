@@ -34,6 +34,7 @@ export const EventList = (props) => {
                                     })
                                 }
                             </div>
+                            <button onClick={() => history.push(`/events/edit/${event.id}`)}>Edit</button>
 
                         </section>
                     })

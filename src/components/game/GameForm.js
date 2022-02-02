@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
 import { useHistory } from 'react-router-dom'
-import { createGame, getGameTypes } from './GameManager.js'
+import { createGame, getGame, getGameTypes, updateGame } from './GameManager.js'
 
 
-export const GameForm = () => {
+export const GameForm = ({editGame}) => {
     const history = useHistory()
     const [gameTypes, setGameTypes] = useState([])
+    const {gameId} = useParams()
 
     /*
         Since the input fields are bound to the values of
@@ -19,6 +21,21 @@ export const GameForm = () => {
         maker: "",
         gameTypeId: 0
     })
+
+    useEffect(() => {
+        if (gameId){
+            getGame(gameId).then((res) => {
+                const gameToEdit = {
+                    skillLevel: res.skill_level,
+                    numberOfPlayers: res.number_of_players,
+                    title: res.title,
+                    maker: res.maker,
+                    gameTypeId: res.game_type.id
+                }
+                setCurrentGame(gameToEdit)
+            })
+        }
+    },[gameId])
 
     useEffect(() => {
         getGameTypes().then(setGameTypes)
@@ -89,7 +106,6 @@ export const GameForm = () => {
                 </div>
             </fieldset>
 
-            {/* TODO: create the rest of the input fields */}
 
             <button type="submit"
                 onClick={evt => {
@@ -103,12 +119,15 @@ export const GameForm = () => {
                         skillLevel: parseInt(currentGame.skillLevel),
                         gameTypeId: parseInt(currentGame.gameTypeId)
                     }
-
-                    // Send POST request to your API
-                    createGame(game)
+                    
+                    // Send PUT/POST request to your API
+                    editGame
+                    ? updateGame(gameId, game)
+                        .then(() => history.push("/games"))
+                    : createGame(game)
                         .then(() => history.push("/games"))
                 }}
-                className="btn btn-primary">Create</button>
+                className="btn btn-primary">{editGame ? "Update Game" : "Create"}</button>
         </form>
     )
 }

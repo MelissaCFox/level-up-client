@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
 import { useHistory } from 'react-router-dom'
 import { getGames } from "../game/GameManager.js"
-import { createEvent } from "./EventManager.js"
+import { createEvent, getEvent, updateEvent } from "./EventManager.js"
 
 
 
-export const EventForm = () => {
+export const EventForm = ({editEvent}) => {
     const history = useHistory()
     const [games, setGames] = useState([])
+    const { eventId } = useParams()
 
     /*
         Since the input fields are bound to the values of
@@ -20,6 +22,20 @@ export const EventForm = () => {
         date: "",
         time: ""
     })
+
+    useEffect(() => {
+        if (editEvent) {
+            getEvent(eventId).then((res) => {
+                const eventToEdit = {
+                    gameId: res.game.id,
+                    description: res.description,
+                    date: res.date,
+                    time: res.time
+                }
+                setCurrentEvent(eventToEdit)
+            })
+        }
+    },[eventId])
 
     useEffect(() => {
         getGames().then(setGames)
@@ -66,7 +82,7 @@ export const EventForm = () => {
                 <div className="form-group">
                     <label htmlFor="date">Date: </label>
                     <input type="date" name="date" required autoFocus className="form-control"
-                        value={currentEvent.maker}
+                        value={currentEvent.date}
                         onChange={changeEventState}
                     />
                 </div>
@@ -94,11 +110,14 @@ export const EventForm = () => {
                         time: currentEvent.time,
                     }
 
-                    // Send POST request to your API
-                    createEvent(event)
+                    // Send PUT/POST request to your API
+                    editEvent
+                    ? updateEvent(eventId, event)
+                    .then(() => history.push("/events"))
+                    : createEvent(event)
                         .then(() => history.push("/events"))
                 }}
-                className="btn btn-primary">Create</button>
+                className="btn btn-primary">{editEvent? "Update  Event" : "Create"}</button>
         </form>
     )
 }
