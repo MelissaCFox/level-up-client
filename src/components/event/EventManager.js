@@ -42,3 +42,13 @@ export const updateEvent = (id, event) => {
     })
         .then(getEvents)
 }
+
+export const deleteEvent = (id) => {
+    return fetch(`http://localhost:8000/events/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`,
+        }
+    })
+        .then(getEvents)
+}

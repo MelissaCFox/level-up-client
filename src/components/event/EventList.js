@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { getEvents } from "./EventManager"
+import { deleteEvent, getEvents } from "./EventManager"
 import { useHistory } from "react-router-dom"
 
 
@@ -35,6 +35,7 @@ export const EventList = (props) => {
                                 }
                             </div>
                             <button onClick={() => history.push(`/events/edit/${event.id}`)}>Edit</button>
+                            <button onClick={() => {deleteEvent(event.id).then(setEvents)}}>Delete</button>
 
                         </section>
                     })
