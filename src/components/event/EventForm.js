@@ -53,7 +53,7 @@ export const EventForm = ({editEvent}) => {
 
     return (
         <form className="eventForm">
-            <h2 className="eventForm__title">Register New Event</h2>
+            <h2 className="eventForm__title">{editEvent ? " Edit Event" :"Register New Event"}</h2>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="gameId">Game: </label>

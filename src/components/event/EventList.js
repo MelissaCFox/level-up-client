@@ -27,13 +27,7 @@ export const EventList = (props) => {
                             <div className="event__date">{event.date}</div>
                             <div className="event__time">{event.time}</div>
                             <div className="event__organizer">Brought to you by: {event.organizer.user.first_name} {event.organizer.user.last_name}</div>
-                            {/* <div className="event__attendees">Attendees:
-                                {
-                                    event.attendees.map((gamer) => {
-                                        return <div key={gamer.id} className="event__gamer">{gamer.user.first_name}</div>
-                                    })
-                                }
-                            </div> */}
+                            <div className="event__attendees">Attendees: {event.attendees_count}</div>
                             <button onClick={() => history.push(`/events/edit/${event.id}`)}>Edit</button>
                             <button onClick={() => {deleteEvent(event.id).then(setEvents)}}>Delete</button>
 
